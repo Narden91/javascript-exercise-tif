@@ -127,3 +127,96 @@ doTheInsert(tableTwo, newRowIndex, employeeInfoObject);
     di conferma della password.
     Nel caso non coincidano far vedere un messaggio di errore.
 */
+
+let messageObj = {
+    unmatchedPass: "Passwords doesn't match",
+    matchedPass: "Passwords match",
+    emptyPassFields: "No password typed",
+    wrongEmail: "Invalid email (use gmail account)"
+}
+
+// Funzione per verifica email
+const validRegistrationEmail = (email) => {
+    // regex for valid gmail
+    const GMAIL_REGEX = /([a-zA-Z0-9]+)([\.{1}])?([a-zA-Z0-9]+)\@gmail([\.])com/g
+
+    // regex for generic email
+    const EMAIL_REGEX = /(\<|^)[\w\d._%+-]+@(?:[\w\d-]+\.)+(\w{2,})(\>|$)/i;
+
+    return GMAIL_REGEX.test(String(email).toLowerCase());
+};
+
+
+// Effettua il check sulle password
+const passwordCheck = (pass, passToCheck) => {
+    // Regex min 6 max 10 caratteri (almeno 1 uppercase, 1 lowercase 1 numero e 1 car. speciale)
+    const PASS_REGEX = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$/
+
+    // Esempio di password per test : 123456@Ad
+    if (PASS_REGEX.test(String(pass)) && PASS_REGEX.test(String(passToCheck))) {
+        return (pass === passToCheck) ? true : false;
+    }
+}
+
+function insertAfter(referenceNode, newNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+
+function createDivItemDetail(renderTextMessage, isError) {
+    if (document.getElementById('message-box')) {
+        document.getElementById('message-box').remove();
+    }
+
+    let divMessageBox = document.createElement('div');
+    divMessageBox.id = "message-box";
+
+    if (isError) {
+        divMessageBox.style = "text-align: left ; margin-top: 20px; color: red; font-style: italic"
+    } else {
+        divMessageBox.style = "text-align: left ; margin-top: 20px; color: green; font-style: italic"
+    }
+
+    divMessageBox.innerHTML = renderTextMessage;
+
+    return divMessageBox;
+}
+
+
+
+function loginSubmit(event) {
+    event.preventDefault();
+
+    let isError = false;
+
+    // Prelevo i 3 campi dal DOM
+    let emailInput = document.getElementById('email').value;
+    let passwordInput = document.getElementById('password').value;
+    let passwordInputConfirm = document.getElementById('password-confirmation').value;
+
+    let formContainer = document.getElementById('inputs-div');
+
+    // Effettuo un check sulla email usata per la registrazione
+    if (validRegistrationEmail(emailInput)) {
+        if (passwordInput !== '' && passwordInputConfirm !== '') {
+            if (passwordCheck(passwordInput, passwordInputConfirm)) {
+
+                let name = createDivItemDetail(messageObj.matchedPass, isError);
+                formContainer.appendChild(name);
+
+            } else {
+                isError = true;
+                let name = createDivItemDetail(messageObj.unmatchedPass, isError);
+                formContainer.appendChild(name);
+            }
+        } else {
+            isError = true;
+            let name = createDivItemDetail(messageObj.emptyPassFields, isError);
+            formContainer.appendChild(name);
+        }
+
+    } else {
+        isError = true;
+        let name = createDivItemDetail(messageObj.wrongEmail, isError);
+        formContainer.appendChild(name);
+    }
+}
