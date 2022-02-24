@@ -1,2 +1,2 @@
-# javascript-exercise-tif
-Esercizi Javascript
+# Esercizi Javascript
+Esercizi Javascript Risolti
