@@ -8,18 +8,37 @@
     che iniziano o meno con la maiuscola, con un testo alternativo 'sample text'.
 */
 
+// 1. Assegnato <p id="target-paragraph"> a paragrafo dal quale prelevare la frase
 
+// 2. Salvare contenuto di paragraph in una variabile 
+let paragraph = document.getElementById("target-paragraph");
+let paragraphText = paragraph.textContent;
 
+// 3. Elimina spazi addizionali della stringa
+let cleanParagraphText = paragraphText.replace(/\s+/g, ' ');
 
+//  5. Oggetto con le parole da sostituire
+let mapObj = {
+    lorem: "awesome",
+    ipsum: "react",
+};
 
+// 6. Funzione per il replace
+function replaceAll(str, mapObj) {
+    // 6. regular expression
+    var re = new RegExp(Object.keys(mapObj).join("|"), "gi");
 
+    // 7. Replace delle parole 
+    return str.replace(re, function(matched) {
+        return mapObj[matched.toLowerCase()];
+    });
+}
 
+let result = replaceAll(cleanParagraphText, mapObj);
 
+document.getElementById('target-paragraph').insertAdjacentHTML("afterend", '<h4 id = "res1-tag"> Risultato Esercizio 1 </h4>');
 
-
-
-
-
+document.getElementById('res1-tag').insertAdjacentHTML("afterend", `<p> ${result} </p>`);
 
 
 /*
@@ -74,17 +93,3 @@
     di conferma della password.
     Nel caso non coincidano far vedere un messaggio di errore.
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
